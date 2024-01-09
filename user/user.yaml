@@ -1,0 +1,85 @@
+openapi: "3.0.0"
+info:
+  version: "1.4.0"
+  title: Click and take off - User Ext Api
+servers:
+  - url: https://dev.clickandtakeoff.com
+    description: Click and Take off developpement server
+  - url: https://my.clickandtakeoff.com
+    description: Click and Take off production server
+security:
+  - bearerAuth: []
+paths:
+  "/cto/user":
+    post:
+      summary: Create user in click and take off
+      description: This api create pilot in click and take off associate to club
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "test@test.cto"
+                nom:
+                  type: string
+                  description: "test"
+                prenom:
+                  type: string
+                  description: "test"
+      responses:
+        "200":
+          description: User created
+        "401":
+          description: Unauthorized
+        "400":
+          description: User already exist / ERROR
+        "402":
+          description: Serveur CTO non disponible
+
+    put:
+      summary: Edit or create user in click and take off
+      description: This api modified pilot email in click and take off associate to club or create the user if email doesn't exist
+      tags:
+        - "User"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                oldEmail:
+                  type: string
+                  description: "test@test.cto"
+                newEmail:
+                  type: string
+                  description: "test@test.cto"
+                nom:
+                  type: string
+                  description: "test"
+                prenom:
+                  type: string
+                  description: "test"
+      responses:
+        "200":
+          description: Email modified / User created
+        "401":
+          description: Unauthorized
+        "400":
+          description: ERROR
+        "402":
+          description: Serveur CTO non disponible
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      description: Token authorization for identify club in the case of externe call of api
+      name: Authorization
+      in: header

@@ -1,0 +1,176 @@
+openapi: "3.0.0"
+info:
+  version: "2.0.0"
+  title: Click and take off - Flight Branch Ext Api
+servers:
+  - url: "https://dev.clickandtakeoff.com/api"
+  - url: "https://my.clickandtakeoff.com/api"
+security:
+  - bearerAuth: []
+paths:
+  "/cto/vol/branche":
+    get:
+      summary: Fetch a list of vol with branches
+      description: It returns a list of vol the user has access to
+      tags:
+        - "Flight Branch"
+      parameters:
+        - name: device
+          in: query
+          description: "F-XXXX"
+          required: true
+          schema:
+            type: string
+        - name: club
+          in: query
+          description: "Click and Take Off"
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: nonaffectes
+          in: query
+          description: "false"
+          required: false
+          schema:
+            type: boolean
+        - name: affectes
+          in: query
+          description: "false"
+          required: false
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ReportVolCTOBranche"
+        "400":
+          description: ERROR
+        "401":
+          description: Unauthorized
+        "402":
+          description: Serveur CTO non disponible
+    put:
+      summary: Affecte the vol in case or update affectation
+      tags:
+        - "Flight Branch"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                device:
+                  type: string
+                  description: "F-XXXX"
+                club:
+                  type: string
+                  description: "Click and Take Off"
+                piloteEmail:
+                  type: string
+                  description: "test@test.cto"
+                instructeurEmail:
+                  type: string
+                  description: "test@test.cto"
+                piloteId:
+                  type: integer
+                  description: "0"
+                instructeurId:
+                  type: integer
+                  description: "0"
+                from:
+                  type: string
+                  description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+                  format: date-time
+                to:
+                  type: string
+                  description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+                  format: date-time
+      responses:
+        "200":
+          description: Vol Affecter
+        "401":
+          description: Unauthorized
+        "400":
+          description: ERROR
+        "402":
+          description: Serveur CTO non disponible
+
+components:
+  schemas:
+    ReportVolCTOBranche:
+      type: object
+      properties:
+        groupName:
+          type: string
+        deviceName:
+          type: string
+        startTime:
+          description: "Represent le temps de début de moteur, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          type: string
+          format: date-time
+        endTime:
+          description: "Represent le temps de fin de moteur, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          type: string
+          format: date-time
+        startTimeFlight:
+          description: "Represent le temps de début de deplacement, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          type: string
+          format: date-time
+        endTimeFlight:
+          description: "Represent le temps de fin de deplacement, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          type: string
+          format: date-time
+        icaoAeroStart:
+          type: string
+          description: "Represent l'aérodromes de début"
+        icaoAeroEnd:
+          type: string
+          description: "Represent l'aérodromes de d'arrive"
+        hourMeterStart:
+          type: integer
+          description: "Represent l'horametre de début de moteur"
+        hourMeterStartFlight:
+          type: integer
+          description: "Represent l'horametre de début de deplacement"
+        hourMeterEnd:
+          type: integer
+          description: "Represent l'horametre de fin de moteur"
+        hourMeterEndFlight:
+          type: integer
+          description: "Represent l'horametre de fin de deplacement"
+        pilotEmail:
+          type: string
+          description: "Represent le mail du pilote, si le vol n'est pas affecter la valeur est vide"
+        instructorEmail:
+          type: string
+          description: "Represent le mail de l'instructeur, si le vol n'est pas affecter ou le vol ne possede pas un instructeur la valeur est vide"
+        landing:
+          type: integer
+          description: "S'il n'y a pas eut d'atterrissage, atterrissage est 0"
+
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      description: Token authorization for identify club in the case of externe call of api
+      name: Authorization
+      in: header

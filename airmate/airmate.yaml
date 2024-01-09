@@ -1,0 +1,50 @@
+---
+openapi: 3.0.0
+info:
+  title: Click & take off - Airmate Api
+  description: The API import flights from airmate to cto
+  version: 1.0.0
+servers:
+  - url: https://dev.clickandtakeoff.com/api/cto
+  - url: http://my.clickandtakeoff.com/api/cto
+security:
+  - bearerAuth: []
+paths:
+  /import/airmate:
+    post:
+      summary: Uploads a file.
+      tags:
+        - "Airmate"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/import_airmate_body"
+      responses:
+        "200":
+          description: OK
+        "204":
+          description: File is empty
+        "400":
+          description: ERROR || File is required || Email is required
+        "401":
+          description: Unauthorized
+        "402":
+          description: Serveur CTO non disponible
+        "404":
+          description: User not found || Device not found
+components:
+  schemas:
+    import_airmate_body:
+      type: object
+      properties:
+        upfile:
+          type: string
+          description: The file to upload.
+          format: binary
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      description: Token authorization for identify airmate in the case of externe call of api
+      name: Authorization
+      in: header

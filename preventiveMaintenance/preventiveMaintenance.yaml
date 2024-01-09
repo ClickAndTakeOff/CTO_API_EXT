@@ -1,0 +1,103 @@
+---
+openapi: 3.0.0
+info:
+  title: Click & Take Off - Preventive Maintenance API
+  description: This api is destined for maintenance center to get data for there devices from Click & Take off
+  version: 1.0.0
+servers:
+  - url: https://dev.clickandtakeoff.com
+    description: Click and Take off developpement server
+  - url: https://my.clickandtakeoff.com
+    description: Click and Take off production server
+security:
+  - bearerAuth: []
+
+paths:
+  /api/cto/preventive/maintenance:
+    get:
+      tags:
+        - "Preventive Maintenance"
+      summary: Get data for Aerolight
+      parameters:
+        - name: from
+          in: query
+          description: Start date for data retrieval. `1963-11-22T18:30:00Z`
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: End date for data retrieval. `1963-11-22T18:30:00Z`
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            format: date-time
+        - name: device
+          in: query
+          description: To fetch one or more devices. Multiple params can be passed like `device=TEST1&device=TEST2`
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: maintenanceCenter
+          in: query
+          description: Name of the center
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PreventiveMaintenanceData"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              example:
+                error: Bad request
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              example:
+                error: Unauthorized
+        "500":
+          description: Authentication error
+          content:
+            application/json:
+              example:
+                error: Authentication error
+components:
+  schemas:
+    PreventiveMaintenanceData:
+      type: object
+      properties:
+        deviceName:
+          type: string
+        duration:
+          type: integer
+        durationFlight:
+          type: integer
+        nbLandings:
+          type: integer
+        nbGAlert:
+          type: integer
+        nbGMax:
+          type: number
+  securitySchemes:
+    bearerAuth:
+      type: apiKey
+      description: Token authorization for identify of maintenance center in the case of externe call of api
+      name: Authorization
+      in: header
