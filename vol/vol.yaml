@@ -5,6 +5,8 @@ info:
 servers:
   - url: "https://dev.clickandtakeoff.com/api"
   - url: "https://my.clickandtakeoff.com/api"
+security:
+  - bearerAuth: []
 paths:
   /cto/vol:
     get:
