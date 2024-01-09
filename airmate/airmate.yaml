@@ -12,7 +12,7 @@ security:
 paths:
   /import/airmate:
     post:
-      summary: Uploads a file.
+      summary: Upload the flight track from Airmate to Click and Take off
       tags:
         - "Airmate"
       requestBody:

@@ -1,42 +1,40 @@
-openapi: "3.0.0"
+openapi: 3.0.0
 info:
-  version: "2.0.0"
-  title: Click and take off - Flight Branch Ext Api
+  version: "1.4"
+  title: Click and take off - CTO VOL API (To be replace with Flight Fetch and Assignment API)
 servers:
   - url: "https://dev.clickandtakeoff.com/api"
   - url: "https://my.clickandtakeoff.com/api"
-security:
-  - bearerAuth: []
 paths:
-  "/cto/vol/branche":
+  /cto/vol:
     get:
-      summary: Fetch a list of vol with branches
+      summary: Fetch a list of vol
       description: It returns a list of vol the user has access to
       tags:
-        - "Flight Branch"
+        - "Vol"
       parameters:
         - name: device
           in: query
-          description: "F-XXXX"
+          description: F-XXXX
           required: true
           schema:
             type: string
         - name: club
           in: query
-          description: "Click and Take Off"
+          description: Click and Take Off
           required: true
           schema:
             type: string
         - name: from
           in: query
-          description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          description: in IS0 8601 format. eg. `1963-11-22T18:30:00Z`
           required: true
           schema:
             type: string
             format: date-time
         - name: to
           in: query
-          description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          description: in IS0 8601 format. eg. `1963-11-22T18:30:00Z`
           required: true
           schema:
             type: string
@@ -61,19 +59,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ReportVolCTOBranche"
+                  $ref: "#/components/schemas/ReportVolCTO"
         "400":
           description: ERROR
         "401":
-          description: Unauthorized
+          description: Unauthorized / Token not correspond to club
         "402":
           description: Serveur CTO non disponible
+        "404":
+          description: Club not found / Device not found
     put:
       summary: Affecte the vol in case or update affectation
       tags:
-        - "Flight Branch"
+        - "Vol"
       requestBody:
-        required: true
         content:
           application/x-www-form-urlencoded:
             schema:
@@ -81,43 +80,41 @@ paths:
               properties:
                 device:
                   type: string
-                  description: "F-XXXX"
                 club:
                   type: string
-                  description: "Click and Take Off"
                 piloteEmail:
                   type: string
-                  description: "test@test.cto"
                 instructeurEmail:
                   type: string
-                  description: "test@test.cto"
                 piloteId:
                   type: integer
-                  description: "0"
                 instructeurId:
                   type: integer
-                  description: "0"
                 from:
                   type: string
-                  description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
                   format: date-time
                 to:
                   type: string
-                  description: "in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
                   format: date-time
       responses:
         "200":
           description: Vol Affecter
         "401":
-          description: Unauthorized
+          description: Unauthorized / Token not correspond to club
         "400":
-          description: ERROR
+          description: ERROR / Indicate Pilot
         "402":
           description: Serveur CTO non disponible
+        "404":
+          description: Club not found / Device not found / Instructor Not Found
+        "406":
+          description: Pilot Not Found
+        "409":
+          description: Conflict / Choose a pilot in the club indicate
 
 components:
   schemas:
-    ReportVolCTOBranche:
+    ReportVolCTO:
       type: object
       properties:
         groupName:
@@ -125,52 +122,57 @@ components:
         deviceName:
           type: string
         startTime:
-          description: "Represent le temps de début de moteur, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
           type: string
           format: date-time
+          description: "Represent le temps de début de moteur, in IS0 8601 format. eg. `1963-11-22T18:30:00Z`"
         endTime:
-          description: "Represent le temps de fin de moteur, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
           type: string
           format: date-time
-        startTimeFlight:
-          description: "Represent le temps de début de deplacement, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          description: "Represent le temps de fin de moteur, in IS0 8601 format. eg. `1963-11-22T18:30:00Z`"
+        startTimeVol:
           type: string
           format: date-time
-        endTimeFlight:
-          description: "Represent le temps de fin de deplacement, in ISO 8601 format. eg. `1963-11-22T18:30:00Z`"
+          description: "Represent le temps de début de deplacement, in IS0 8601 format. eg. `1963-11-22T18:30:00Z`"
+        endTimeVol:
           type: string
           format: date-time
-        icaoAeroStart:
+          description: "Represent le temps de fin de deplacement, in IS0 8601 format. eg. `1963-11-22T18:30:00Z`"
+        oaciAeroStart:
           type: string
-          description: "Represent l'aérodromes de début"
-        icaoAeroEnd:
+          description: Represent l'aérodromes de début
+        oaciAeroEnd:
           type: string
-          description: "Represent l'aérodromes de d'arrive"
-        hourMeterStart:
+          description: Represent l'aérodromes de d'arrive
+        horametreDebut:
           type: integer
-          description: "Represent l'horametre de début de moteur"
-        hourMeterStartFlight:
+          description: Represent l'horametre de début de moteur
+        horametreDebutVol:
           type: integer
-          description: "Represent l'horametre de début de deplacement"
-        hourMeterEnd:
+          description: Represent l'horametre de début de deplacement
+        horametreFin:
           type: integer
-          description: "Represent l'horametre de fin de moteur"
-        hourMeterEndFlight:
+          description: Represent l'horametre de fin de moteur
+        horametreFinVol:
           type: integer
-          description: "Represent l'horametre de fin de deplacement"
-        pilotEmail:
+          description: Represent l'horametre de fin de deplacement
+        oaci:
+          type: array
+          description: Represent la liste des aerodromes de toucher
+          items:
+            type: string
+        piloteEmail:
           type: string
           description: "Represent le mail du pilote, si le vol n'est pas affecter la valeur est vide"
-        instructorEmail:
+        instructeurEmail:
           type: string
           description: "Represent le mail de l'instructeur, si le vol n'est pas affecter ou le vol ne possede pas un instructeur la valeur est vide"
-        landing:
+        atterrissage:
           type: integer
-          description: "S'il n'y a pas eut d'atterrissage, atterrissage est 0"
+          description: "S'il n'y a pas eut d'atterrissage 0"
 
   securitySchemes:
     bearerAuth:
       type: apiKey
-      description: Token authorization for identify club in the case of externe call of api
       name: Authorization
       in: header
+      description: Token authorization for identify club in the case of externe call of api

@@ -1,12 +1,11 @@
----
 openapi: 3.0.0
 info:
   title: Click & Take Off - Preventive Maintenance API
-  description: This api is destined for maintenance center to get data for there devices from Click & Take off
+  description: This API has been designed for maintenance organizations to get data from Click & Take off
   version: 1.0.0
 servers:
   - url: https://dev.clickandtakeoff.com
-    description: Click and Take off developpement server
+    description: Click and Take off development server
   - url: https://my.clickandtakeoff.com
     description: Click and Take off production server
 security:
@@ -17,7 +16,7 @@ paths:
     get:
       tags:
         - "Preventive Maintenance"
-      summary: Get data for Aerolight
+      summary: Get data for maintenance purpose
       parameters:
         - name: from
           in: query

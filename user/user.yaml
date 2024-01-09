@@ -43,7 +43,7 @@ paths:
           description: Serveur CTO non disponible
 
     put:
-      summary: Edit or create user in click and take off
+      summary: Update or create user in click and take off
       description: This api modified pilot email in click and take off associate to club or create the user if email doesn't exist
       tags:
         - "User"

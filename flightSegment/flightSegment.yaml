@@ -1,19 +1,19 @@
 openapi: "3.0.0"
 info:
   version: "2.0.0"
-  title: Click and Take off - Flight Fetch and Assignment API
+  title: Click and Take off - Flight Segment Fetch and Assignment API
 servers:
   - url: "https://dev.clickandtakeoff.com/api"
   - url: "https://my.clickandtakeoff.com/api"
 security:
   - bearerAuth: []
 paths:
-  "/cto/flight":
+  "/cto/flight/segment":
     get:
-      summary: Fetch a list of flights
+      summary: Fetch a list of flights segments
       tags:
-        - "Flight"
-      description: It returns a list of flights the user has access to
+        - "Flight Segment"
+      description: It returns a list of flights segments the user has access to
       parameters:
         - name: device
           in: query
@@ -61,7 +61,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/FlightCtoItems"
+                  $ref: "#/components/schemas/FlightSegmentCtoItems"
         "400":
           description: ERROR
         "401":
@@ -72,9 +72,9 @@ paths:
           description: Club not found / Device not found
 
     put:
-      summary: Flight Assignment
+      summary: Flight Segment Assignment
       tags:
-        - "Flight"
+        - "Flight Segment"
       requestBody:
         required: true
         content:
@@ -110,11 +110,11 @@ paths:
                   format: date-time
       responses:
         "200":
-          description: Flight has been assigned correctly
+          description: Flight Segment has been assigned correctly
         "401":
           description: Unauthorized
         "400":
-          description: ERROR / Pilot not indicated
+          description: ERROR / Pilot not indicated / 
         "402":
           description: CTO server is not available. Please try later
         "404":
@@ -126,7 +126,7 @@ paths:
 
 components:
   schemas:
-    FlightCtoItems:
+    FlightSegmentCtoItems:
       type: object
       properties:
         clubName:
@@ -167,11 +167,6 @@ components:
         hourMeterEndFlight:
           type: integer
           description: "Movement stop hour meter"
-        icao:
-          type: array
-          items:
-            type: string
-          description: "List of aerodrome where ther are some touch and go"
         pilotEmail:
           type: string
           description: "Pilot email adress, empty if flight has not been assigned"

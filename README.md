@@ -2,8 +2,10 @@
 
 Welcome to the API documentation. Choose an API definition to explore:
 
-- [Flight Ext API](./flight)
-- [light Branch Ext API](./flightBranch/)
+- [Flight Fetch and Assignment API](./flight)
+- [Flight Segment Fetch and Assignment API](./flightSegment/)
+- [CTO VOL API (To be replace with Flight Fetch and Assignment API)](./vol)
+- [CTO VOL BRANCHE API (To be replace with Flight Segment Fetch and Assignment API)](./vol)
 - [User Ext API](./user/)
 - [reventive Maintenance API](./preventiveMaintenance/)
 - [Airmate API](./airmate/)
