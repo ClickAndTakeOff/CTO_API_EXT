@@ -72,7 +72,7 @@ paths:
           description: Club not found / Device not found
 
     put:
-      summary: Flight Segment Assignment
+      summary:  🚧🚧🚧🚧🚧 - Flight Segment Assignment
       tags:
         - "Flight Segment"
       requestBody:
