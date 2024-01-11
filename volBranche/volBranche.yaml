@@ -71,7 +71,7 @@ paths:
         "404":
           description: Club not found / Device not found
     put:
-      summary: 🚧🚧🚧🚧🚧 - Affecte the vol branch in case or update affectation
+      summary: Affecte the vol branch in case or update affectation
       tags:
         - "Vol Branche"
       requestBody:
