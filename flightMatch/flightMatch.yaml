@@ -11,8 +11,6 @@ paths:
     put:
       summary: Match and assign a flight using external flight times
       description: |
-        Availability depends on the CTO server version. Contact CTO before using this endpoint.
-
         Finds flights for the specified club and aircraft which overlap the submitted flight times.
         At least 80% of the submitted interval must be covered by the CTO flight. The flight with
         the greatest overlap is selected. Equal best matches are rejected as ambiguous.
