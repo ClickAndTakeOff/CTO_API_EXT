@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: Click and Take Off - Flight matching and assignment API
+  version: 1.0.0
+servers:
+  - url: https://my.clickandtakeoff.com/api
+security:
+  - bearerAuth: []
+paths:
+  /cto/flight/match:
+    put:
+      summary: Match and assign a flight using external flight times
+      description: |
+        Availability depends on the CTO server version. Contact CTO before using this endpoint.
+
+        Finds flights for the specified club and aircraft which overlap the submitted flight times.
+        At least 80% of the submitted interval must be covered by the CTO flight. The flight with
+        the greatest overlap is selected. Equal best matches are rejected as ambiguous.
+
+        An existing assignment is updated to the latest received pilot and instructor. If both
+        are unchanged, the assignment is left unchanged. Omitting the instructor clears an
+        existing instructor. A submitted interval can correspond to part of a CTO flight; the
+        assignment applies to the complete CTO flight.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [device, club, from, to]
+              properties:
+                device:
+                  type: string
+                  example: F-GPJL
+                club:
+                  type: string
+                  example: Aero Club
+                from:
+                  type: string
+                  format: date-time
+                  example: '2026-10-18T10:00:00Z'
+                to:
+                  type: string
+                  format: date-time
+                  example: '2026-10-18T10:30:00Z'
+                pilotEmail:
+                  type: string
+                  format: email
+                  description: Pilot email; supply this or pilotId.
+                pilotId:
+                  type: integer
+                  format: int64
+                  description: Pilot ID; takes precedence over pilotEmail when nonzero.
+                instructorEmail:
+                  type: string
+                  format: email
+                  description: Optional instructor email.
+                instructorId:
+                  type: integer
+                  format: int64
+                  description: Optional instructor ID; takes precedence over instructorEmail when nonzero.
+      responses:
+        '200':
+          description: Flight assigned or already assigned.
+        '400':
+          description: Invalid or missing required parameters, or an invalid interval.
+        '401':
+          description: Invalid token for the club.
+        '404':
+          description: Club, aircraft, instructor or matching flight not found.
+        '406':
+          description: Pilot not found.
+        '409':
+          description: Equal best matches or an inconsistent existing assignment.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
