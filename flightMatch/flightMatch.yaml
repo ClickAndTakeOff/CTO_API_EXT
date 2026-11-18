@@ -3,6 +3,7 @@ info:
   title: Click and Take Off - Flight matching and assignment API
   version: 1.0.0
 servers:
+  - url: https://dev.clickandtakeoff.com/api
   - url: https://my.clickandtakeoff.com/api
 security:
   - bearerAuth: []
