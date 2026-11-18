@@ -85,8 +85,10 @@ paths:
       description: |
         Send the parameters in the application/x-www-form-urlencoded request body.
         Identify the pilot by pilotId or pilotEmail; an instructor is optional. Use the exact
-        segment start and end timestamps returned by the API. volId and branchNumber are not
-        assignment parameters. Assignment also depends on the segment being matched to a flight.
+        segment start and end timestamps returned by the API, or provide volId instead. When volId
+        is present it takes precedence and dates are ignored. It identifies the complete flight,
+        not a particular segment; branchNumber is not an assignment parameter. The flight must
+        belong to the supplied aircraft and authorized club.
       tags:
         - "Flight Segment"
       requestBody:
@@ -95,8 +97,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required: [device, club, from, to]
+              required: [device, club]
+              anyOf:
+                - required: [volId]
+                - required: [from, to]
               properties:
+                volId:
+                  type: integer
+                  format: int64
+                  minimum: 1
+                  description: CTO flight ID; alternative to both from and to.
                 device:
                   type: string
                   description: "F-XXXX"
@@ -149,7 +159,7 @@ components:
         volId:
           type: integer
           format: int64
-          description: Internal flight identifier; not accepted as an assignment parameter
+          description: Internal flight identifier, usable as an assignment parameter
         deviceId:
           type: integer
           format: int64
