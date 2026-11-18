@@ -84,7 +84,9 @@ paths:
       description: |
         Send the parameters in the application/x-www-form-urlencoded request body.
         Identify the pilot by pilotId or pilotEmail; an instructor is optional. Use the exact
-        flight start and end timestamps returned by the API. volId is not an assignment parameter.
+        flight start and end timestamps returned by the API, or provide volId instead. When volId
+        is present it takes precedence and dates are ignored. The flight must belong to the
+        supplied aircraft and authorized club.
       tags:
         - "Flight"
       requestBody:
@@ -93,8 +95,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required: [device, club, from, to]
+              required: [device, club]
+              anyOf:
+                - required: [volId]
+                - required: [from, to]
               properties:
+                volId:
+                  type: integer
+                  format: int64
+                  minimum: 1
+                  description: CTO flight ID; alternative to both from and to.
                 device:
                   type: string
                   description: "F-XXXX"
@@ -147,7 +157,7 @@ components:
         volId:
           type: integer
           format: int64
-          description: Internal flight identifier; not accepted as an assignment parameter
+          description: Internal flight identifier, usable as an assignment parameter
         deviceId:
           type: integer
           format: int64

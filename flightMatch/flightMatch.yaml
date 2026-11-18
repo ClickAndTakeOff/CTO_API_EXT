@@ -12,7 +12,11 @@ paths:
     put:
       summary: Match and assign a flight using external flight times
       description: |
-        Finds flights for the specified club and aircraft which overlap the submitted flight times.
+        Provide volId to identify the complete CTO flight directly, or provide both from and to
+        to find a flight using the submitted times. When volId is present it takes precedence and
+        dates are ignored. The flight must belong to the supplied aircraft and authorized club.
+
+        When searching by time, finds flights for the specified club and aircraft which overlap the submitted flight times.
         At least 80% of the submitted interval must be covered by the CTO flight. The flight with
         the greatest overlap is selected. Equal best matches are rejected as ambiguous.
 
@@ -26,8 +30,16 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required: [device, club, from, to]
+              required: [device, club]
+              anyOf:
+                - required: [volId]
+                - required: [from, to]
               properties:
+                volId:
+                  type: integer
+                  format: int64
+                  minimum: 1
+                  description: CTO flight ID; alternative to both from and to.
                 device:
                   type: string
                   example: F-GPJL
